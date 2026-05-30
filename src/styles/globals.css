@@ -1,3 +1,140 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Design Tokens — CSS Custom Properties */
+:root {
+  /* Professional Colors */
+  --professional-primary: #2C3E50;
+  --professional-primary-dark: #1A252F;
+  --professional-primary-light: #ECF0F1;
+  --professional-accent: #3498DB;
+  --professional-accent-dark: #2980B9;
+  --professional-background: #FFFFFF;
+  --professional-alt-background: #F8F9FA;
+  --professional-surface: #FFFFFF;
+  --professional-text-primary: #2C3E50;
+  --professional-text-secondary: #7F8C8D;
+  --professional-text-disabled: #BDC3C7;
+  --professional-border: #E0E0E0;
+  --professional-success: #27AE60;
+  --professional-error: #E74C3C;
+
+  /* Spent App Colors */
+  --spent-primary: #3F51B5;
+  --spent-primary-dark: #303F9F;
+  --spent-bright: #5C6BC0;
+  --spent-soft: #E8EAF6;
+  --spent-accent: #FF4081;
+  --spent-accent-dark: #F50057;
+  --spent-mint-green: #00BFA5;
+  --spent-coral: #FF5252;
+  --spent-navy: #1A237E;
+  --spent-slate: #455A64;
+  --spent-light-slate: #78909C;
+  --spent-background: #FAF9FF;
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 3rem;
+  --spacing-xxl: 5rem;
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-heading: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-body: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: JetBrains Mono, Fira Code, Consolas, Monaco, monospace;
+}
+
+/* Base Styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--professional-text-primary);
+  background-color: var(--professional-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Accessibility: Skip to content link */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--professional-primary);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+/* Accessibility: Focus visible styles */
+*:focus-visible {
+  outline: 2px solid var(--professional-accent);
+  outline-offset: 2px;
+}
+
+/* Accessibility: Screen reader only class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
