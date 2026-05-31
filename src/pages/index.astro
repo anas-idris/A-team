@@ -1,16 +1,184 @@
 ---
-import '../styles/globals.css';
+import BaseLayout from '../components/Layout/BaseLayout.astro';
+import Header from '../components/Layout/Header.astro';
+import Home from '../components/Sections/Home.astro';
+import Product from '../components/Sections/Product.astro';
+import Contact from '../components/Sections/Contact.astro';
+import Footer from '../components/Layout/Footer.astro';
+import Lightbox from '../components/UI/Lightbox.astro';
+
+const developerName = 'Anas';
+const bio = 'Mobile developer specializing in Android apps with Jetpack Compose. Passionate about building intuitive, user-centric applications that solve real problems.';
+const skills = ['JavaScript', 'TypeScript', 'Astro', 'Kotlin', 'Jetpack Compose', 'Tailwind CSS', 'Sanity.io', 'Node.js'];
+
+const appInfo = {
+  name: 'Spent',
+  tagline: 'Smart Expense Tracker',
+  description: 'Track your expenses intelligently with SMS capture, bill scanning, and deep insights. Built with Android Jetpack Compose for a seamless mobile experience.',
+};
+
+const contactInfo = {
+  email: 'bisquery@gmail.com',
+  phone: '',
+};
+
+const screenshotImages = [
+  { src: '/images/app-screenshots/list_view.png', alt: 'Spent List View', caption: 'List View' },
+  { src: '/images/app-screenshots/trends_view.png', alt: 'Spent Trends View', caption: 'Trends & Insights' },
+  { src: '/images/app-screenshots/add_expense.png', alt: 'Spent Add Expense', caption: 'Add Expense' },
+  { src: '/images/app-screenshots/backup_restore.png', alt: 'Spent Backup & Restore', caption: 'Backup & Restore' },
+];
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Spent - insight | Portfolio</title>
-  </head>
-  <body>
-    <h1 class="text-3xl font-bold text-gray-900">Spent - insight Portfolio</h1>
-    <p class="mt-4 text-lg text-gray-600">Astro + Tailwind CSS initialized successfully!</p>
-  </body>
-</html>
+<BaseLayout title="Home" description={bio}>
+  <Header />
+
+  <section id="home" class="min-h-screen pt-16 section-tracker">
+    <Home
+      developerName={developerName}
+      bio={bio}
+      skills={skills}
+      appInfo={appInfo}
+    />
+  </section>
+
+  <section id="product" class="pt-16 section-tracker">
+    <Product />
+  </section>
+
+  <section id="contact" class="pt-16 section-tracker">
+    <Contact
+      contactInfo={contactInfo}
+    />
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<script client:load>
+  const screenshots = {
+    isOpen: false,
+    index: 0,
+    images: [
+      { src: '/images/app-screenshots/list_view.png', alt: 'Spent List View', caption: 'List View' },
+      { src: '/images/app-screenshots/trends_view.png', alt: 'Spent Trends View', caption: 'Trends & Insights' },
+      { src: '/images/app-screenshots/add_expense.png', alt: 'Spent Add Expense', caption: 'Add Expense' },
+      { src: '/images/app-screenshots/backup_restore.png', alt: 'Spent Backup & Restore', caption: 'Backup & Restore' },
+    ],
+  };
+
+  function renderLightbox() {
+    const container = document.getElementById('lightbox-container');
+    if (!container) return;
+
+    if (!screenshots.isOpen) {
+      container.innerHTML = '';
+      return;
+    }
+
+    const current = screenshots.images[screenshots.index];
+
+    container.innerHTML = `
+      <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <div class="absolute inset-0" onclick="window._closeLightbox()" aria-hidden="true"></div>
+        <button class="absolute top-4 right-4 z-20 p-2 text-white hover:text-professional-accent transition-colors duration-200" onclick="window._closeLightbox()" aria-label="Close image viewer">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <button class="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 text-white hover:text-professional-accent transition-colors duration-200" onclick="window._prevImage()" aria-label="Previous image">
+          <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <div class="relative z-10 max-w-[90vw] max-h-[80vh] flex flex-col items-center">
+          <img src="${current.src}" alt="${current.alt}" class="max-w-full max-h-[70vh] object-contain rounded-lg" />
+          ${current.caption ? `<p class="text-white mt-4 text-body-small text-center">${current.caption}</p>` : ''}
+          <p class="text-white mt-2 text-body-small opacity-75">${screenshots.index + 1} / ${screenshots.images.length}</p>
+        </div>
+        <button class="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 text-white hover:text-professional-accent transition-colors duration-200" onclick="window._nextImage()" aria-label="Next image">
+          <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    `;
+
+    document.body.style.overflow = 'hidden';
+  }
+
+  window._openLightbox = (index) => {
+    screenshots.isOpen = true;
+    screenshots.index = index;
+    renderLightbox();
+  };
+
+  window._closeLightbox = () => {
+    screenshots.isOpen = false;
+    document.body.style.overflow = '';
+    renderLightbox();
+  };
+
+  window._nextImage = () => {
+    screenshots.index = (screenshots.index + 1) % screenshots.images.length;
+    renderLightbox();
+  };
+
+  window._prevImage = () => {
+    screenshots.index = (screenshots.index - 1 + screenshots.images.length) % screenshots.images.length;
+    renderLightbox();
+  };
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (!screenshots.isOpen) return;
+    if (e.key === 'ArrowRight') window._nextImage();
+    if (e.key === 'ArrowLeft') window._prevImage();
+    if (e.key === 'Escape') window._closeLightbox();
+  });
+
+  // Listen for gallery click events
+  window.addEventListener('open-lightbox', (e) => {
+    const { index } = e.detail;
+    window._openLightbox(index);
+  });
+
+  // Section view tracking
+  const sectionIds = ['home', 'product', 'contact'];
+  const trackedSections = new Set();
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !trackedSections.has(entry.target.id)) {
+        trackedSections.add(entry.target.id);
+        if (typeof window !== 'undefined' && window.plausible) {
+          window.plausible('section_view', { props: { name: entry.target.id } });
+        }
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.section-tracker').forEach(section => {
+    observer.observe(section);
+  });
+
+  // Lightbox tracking
+  const originalOpenLightbox = window._openLightbox;
+  const originalCloseLightbox = window._closeLightbox;
+  
+  window._openLightbox = (index) => {
+    if (typeof window !== 'undefined' && window.plausible) {
+      window.plausible('lightbox_open');
+    }
+    originalOpenLightbox(index);
+  };
+  
+  window._closeLightbox = () => {
+    if (typeof window !== 'undefined' && window.plausible) {
+      window.plausible('lightbox_close');
+    }
+    originalCloseLightbox();
+  };
+</script>
+
+<div id="lightbox-container"></div>

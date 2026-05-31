@@ -1,0 +1,114 @@
+---
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: import('astro').HTMLAttributes['children'];
+  disableBackdropClick?: boolean;
+}
+
+const { isOpen, onClose, children, disableBackdropClick = false } = Astro.props;
+
+if (!isOpen) {
+  return null;
+}
+---
+
+<div
+  class="fixed inset-0 z-[100] flex items-center justify-center"
+  role="dialog"
+  aria-modal="true"
+>
+  <div
+    class={`absolute inset-0 bg-black transition-opacity duration-200 ${isOpen ? 'opacity-80' : 'opacity-0'}`}
+    onclick={() => !disableBackdropClick && onClose()}
+    aria-hidden="true"
+  />
+  <div class="relative z-10 max-w-[90vw] max-h-[80vh] mx-4">
+    <div
+      class="transform transition-all duration-200"
+      class:list={{
+        'scale-95 opacity-0': !isOpen,
+        'scale-100 opacity-100': isOpen,
+      }}
+    >
+      {children}
+    </div>
+  </div>
+</div>
+
+<style>
+  .modal-content {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  .modal-content.modal-open {
+    opacity: 1;
+    transform: scale(1);
+  }
+</style>
+
+<script client:load>
+  // Focus trap
+  const modal = document.querySelector('[role="dialog"]');
+  
+  if (isOpen && modal) {
+    const focusableElements = modal.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstElement = focusableElements[0] as HTMLElement;
+    
+    if (firstElement) {
+      firstElement.focus();
+    }
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        const firstFocusable = focusableElements[0] as HTMLElement;
+        const lastFocusable = focusableElements[focusableElements.length - 1] as HTMLElement;
+        
+        if (e.shiftKey) {
+          if (document.activeElement === firstFocusable) {
+            e.preventDefault();
+            lastFocusable.focus();
+          }
+        } else {
+          if (document.activeElement === lastFocusable) {
+            e.preventDefault();
+            firstFocusable.focus();
+          }
+        }
+      }
+    };
+    
+    document.addEventListener('keydown', handleKeyDown);
+    
+    // Store reference for cleanup
+    (modal as any)._keydownHandler = handleKeyDown;
+  }
+  
+  // Restore focus on close
+  const originalOnClose = onClose;
+  const restoredOnClose = () => {
+    document.removeEventListener('keydown', (modal as any)?._keydownHandler);
+    originalOnClose();
+  };
+  window._modalRestoreFocus = restoredOnClose;
+  
+  // Lock body scroll
+  if (isOpen) {
+    document.body.style.overflow = 'hidden';
+  }
+  
+  // Store original state for restoration
+  (document.body as any)._originalOverflow = document.body.style.overflow;
+</script>
+
+<script client:load>
+  // Restore body scroll on unmount
+  const observer = new MutationObserver(() => {
+    if (!document.querySelector('[role="dialog"]')) {
+      document.body.style.overflow = (document.body as any)._originalOverflow || '';
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+</script>

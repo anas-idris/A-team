@@ -1,0 +1,131 @@
+---
+interface HeaderProps {
+  logo?: string;
+  navLinks: Array<{ label: string; href: string }>;
+}
+
+const {
+  logo = 'Spent',
+  navLinks = [
+    { label: 'Home', href: '#home' },
+    { label: 'Product', href: '#product' },
+    { label: 'Contact', href: '#contact' },
+  ],
+} = Astro.props;
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 bg-professional-background/95 backdrop-blur-sm transition-shadow duration-300" role="banner">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <a href="#home" class="text-professional-primary font-heading text-xl font-bold">{logo}</a>
+
+      <nav class="hidden md:flex items-center gap-8" role="navigation" aria-label="Main navigation">
+        {navLinks.map(link => (
+          <a
+            href={link.href}
+            class="text-professional-text-secondary hover:text-professional-accent transition-colors duration-200 nav-link"
+            data-nav-link
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <button
+        class="md:hidden p-2 text-professional-text-primary hover:text-professional-accent"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        id="hamburger-btn"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden pb-4">
+      <nav role="navigation" aria-label="Mobile navigation">
+        {navLinks.map(link => (
+          <a
+            href={link.href}
+            class="block py-2 text-professional-text-secondary hover:text-professional-accent nav-link"
+            data-nav-link
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+    </div>
+  </div>
+</header>
+
+<script client:load>
+  const hamburger = document.getElementById('hamburger-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  hamburger?.addEventListener('click', () => {
+    const isHidden = mobileMenu!.classList.toggle('hidden');
+    hamburger.setAttribute('aria-expanded', String(!isHidden));
+    hamburger.setAttribute('aria-label', isHidden ? 'Open navigation menu' : 'Close navigation menu');
+  });
+
+  hamburger?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      hamburger.click();
+    }
+  });
+
+  document.querySelectorAll('[data-nav-link]').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu?.classList.add('hidden');
+      hamburger?.setAttribute('aria-expanded', 'false');
+      hamburger?.setAttribute('aria-label', 'Open navigation menu');
+    });
+
+    link.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        link.click();
+      }
+    });
+  });
+
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('[data-nav-link]');
+
+  const setActiveLink = (href) => {
+    navLinks.forEach(link => {
+      const isActive = link.getAttribute('href') === href;
+      if (isActive) {
+        link.className = 'text-professional-accent font-semibold transition-colors duration-200 nav-link';
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.className = 'text-professional-text-secondary hover:text-professional-accent transition-colors duration-200 nav-link';
+        link.removeAttribute('aria-current');
+      }
+    });
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        setActiveLink(`#${id}`);
+      }
+    });
+  }, { rootMargin: '-50% 0px -50% 0px' });
+
+  sections.forEach(section => observer.observe(section));
+
+  const header = document.querySelector('header');
+
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.scrollY;
+    if (currentScroll > 10) {
+      header?.classList.add('shadow-md');
+    } else {
+      header?.classList.remove('shadow-md');
+    }
+  }, { passive: true });
+</script>

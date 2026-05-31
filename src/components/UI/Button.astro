@@ -1,0 +1,24 @@
+---
+interface ButtonProps {
+  text: string;
+  link: string;
+  variant?: 'primary' | 'secondary';
+  eventAction?: string;
+}
+
+const { text, link, variant = 'primary', eventAction } = Astro.props;
+
+const btnClass = variant === 'primary'
+  ? 'inline-flex items-center justify-center px-6 py-3 rounded-md bg-professional-accent text-white font-heading hover:bg-professional-accent-dark transition-colors duration-200'
+  : 'inline-flex items-center justify-center px-6 py-3 rounded-md border-2 border-professional-accent text-professional-accent font-heading hover:bg-professional-accent hover:text-white transition-colors duration-200';
+---
+
+{eventAction ? (
+  <a href={link} class={btnClass} aria-label={text} onclick={(e) => {
+    if (typeof window !== 'undefined' && window.plausible) {
+      window.plausible('cta_click', { props: { action: eventAction } });
+    }
+  }}>{text}</a>
+) : (
+  <a href={link} class={btnClass} aria-label={text}>{text}</a>
+)}

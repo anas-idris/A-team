@@ -1,0 +1,119 @@
+---
+interface LightboxProps {
+  isOpen: boolean;
+  onClose: () => void;
+  images: Array<{ src: string; alt: string; caption: string }>;
+  activeIndex: number;
+  onNext: () => void;
+  onPrev: () => void;
+}
+
+const { isOpen, onClose, images, activeIndex, onNext, onPrev } = Astro.props;
+
+if (!isOpen || images.length === 0) {
+  return null;
+}
+
+const currentImage = images[activeIndex];
+---
+
+<div
+  class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Image viewer"
+>
+  <!-- Backdrop -->
+  <div
+    class="absolute inset-0"
+    onclick={onClose}
+    aria-hidden="true"
+  />
+  
+  <!-- Close button -->
+  <button
+    class="absolute top-4 right-4 z-20 p-2 text-white hover:text-professional-accent transition-colors duration-200"
+    onclick={onClose}
+    aria-label="Close image viewer"
+  >
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+  
+  <!-- Previous arrow -->
+  <button
+    class="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 text-white hover:text-professional-accent transition-colors duration-200"
+    onclick={onPrev}
+    aria-label="Previous image"
+  >
+    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+  
+  <!-- Image -->
+  <div class="relative z-10 max-w-[90vw] max-h-[80vh] flex flex-col items-center">
+    <img
+      src={currentImage.src}
+      alt={currentImage.alt}
+      class="max-w-full max-h-[70vh] object-contain rounded-lg"
+    />
+    <!-- Caption -->
+    {currentImage.caption && (
+      <p class="text-white mt-4 text-body-small text-center">{currentImage.caption}</p>
+    )}
+    <!-- Counter -->
+    <p class="text-white mt-2 text-body-small opacity-75">
+      {activeIndex + 1} / {images.length}
+    </p>
+  </div>
+  
+  <!-- Next arrow -->
+  <button
+    class="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 text-white hover:text-professional-accent transition-colors duration-200"
+    onclick={onNext}
+    aria-label="Next image"
+  >
+    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    </svg>
+  </button>
+</div>
+
+<script client:load>
+  const handleKeyDown = (e: KeyboardEvent) => {
+    switch (e.key) {
+      case 'ArrowLeft':
+        e.preventDefault();
+        onPrev();
+        break;
+      case 'ArrowRight':
+        e.preventDefault();
+        onNext();
+        break;
+      case 'Escape':
+        e.preventDefault();
+        onClose();
+        break;
+    }
+  };
+  
+  document.addEventListener('keydown', handleKeyDown);
+  
+  // Store for cleanup
+  (document as any)._lightboxHandler = handleKeyDown;
+</script>
+
+<script client:load>
+  // Restore body scroll when lightbox closes
+  const checkClose = () => {
+    if (!document.querySelector('.fixed.inset-0.z-\\[100\\]')) {
+      document.body.style.overflow = (document.body as any)._originalOverflow || '';
+      document.removeEventListener('keydown', (document as any)._lightboxHandler);
+    }
+  };
+  
+  const observer = new MutationObserver(checkClose);
+  observer.observe(document.body, { childList: true, subtree: true });
+</script>

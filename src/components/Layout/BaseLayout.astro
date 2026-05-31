@@ -1,0 +1,78 @@
+---
+interface BaseLayoutProps {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title,
+  description = 'Spent - insight Portfolio Website | Smart Expense Tracker by Anas',
+  image = '/og-image.png',
+} = Astro.props;
+
+const siteUrl = import.meta.env.SITE || 'https://example.com';
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Anas',
+  jobTitle: 'Mobile Developer',
+  url: siteUrl,
+  sameAs: [
+    'https://www.linkedin.com/in/anas-idris/',
+  ],
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Spent - insight Portfolio',
+  url: siteUrl,
+};
+---
+
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | Spent - insight</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={siteUrl} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={`${siteUrl}${image}`} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={siteUrl} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${siteUrl}${image}`} />
+
+    <meta name="robots" content="index, follow" />
+
+    <script type="application/ld+json">{JSON.stringify(personSchema)}</script>
+    <script type="application/ld+json">{JSON.stringify(websiteSchema)}</script>
+
+    {import.meta.env.PLAUSIBLE_DOMAIN && (
+      <script
+        defer
+        data-domain={import.meta.env.PLAUSIBLE_DOMAIN}
+        src="https://plausible.io/js/script.js"
+      ></script>
+    )}
+
+    <style>
+      {@import '../styles/globals.css'}
+    </style>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <main id="main-content" role="main">
+      <slot />
+    </main>
+  </body>
+</html>

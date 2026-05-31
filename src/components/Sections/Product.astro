@@ -1,0 +1,151 @@
+---
+import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
+import listview from '../../../public/images/app-screenshots/list_view.png';
+import trendsview from '../../../public/images/app-screenshots/trends_view.png';
+import addexpense from '../../../public/images/app-screenshots/add_expense.png';
+import backuprestore from '../../../public/images/app-screenshots/backup_restore.png';
+
+const screenshotAssets = {
+  list_view: listview,
+  trends_view: trendsview,
+  add_expense: addexpense,
+  backup_restore: backuprestore,
+};
+
+const spentAppData = await getCollection('spentApp', ({ id }) => id === 'spent-app');
+const appData = spentAppData[0]?.data;
+
+const title = appData?.title || 'Spent — Smart Expense Tracker';
+const tagline = appData?.tagline || 'Smart Expense Tracker';
+const description = appData?.description || '';
+const features = appData?.features || [];
+const techStack = appData?.techStack || [];
+const screenshots = appData?.screenshots || [];
+---
+
+<div class="bg-spent-background py-16 md:py-24">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Hero -->
+    <div class="text-center mb-16">
+      <h2 class="font-heading text-h2 text-spent-navy mb-4">{title}</h2>
+      <p class="text-body-large text-spent-slate max-w-2xl mx-auto">{description}</p>
+    </div>
+    
+    <!-- Device Frame Mockup -->
+    <div class="flex justify-center mb-20">
+      <div class="relative bg-spent-primary rounded-3xl p-3 shadow-2xl">
+        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-5 bg-spent-primary rounded-b-xl z-10" />
+        <div class="w-64 sm:w-72 h-[480px] rounded-2xl bg-spent-soft flex items-center justify-center overflow-hidden">
+          {screenshots.length > 0 && screenshots[0].image && screenshotAssets[screenshots[0].image as keyof typeof screenshotAssets] ? (() => {
+            const img = screenshotAssets[screenshots[0].image as keyof typeof screenshotAssets];
+            const optimized = getImage({ src: img, formats: ['webp', 'avif'], width: 288, height: 480 });
+            return <img src={optimized.src} width={optimized.width} height={optimized.height} alt="Spent app home screen" class="w-full h-full object-cover" decoding="async" />;
+          })() : null}
+        </div>
+      </div>
+    </div>
+    
+    <!-- Features Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+      {features.map(feature => (
+        <div class="bg-professional-surface rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300 p-6">
+          <div class="w-12 h-12 rounded-lg bg-spent-soft flex items-center justify-center mb-4">
+            <span class="text-2xl">{feature.icon}</span>
+          </div>
+          <h4 class="font-heading text-h4 text-professional-primary mb-2">{feature.title}</h4>
+          <p class="text-body text-professional-text-secondary">{feature.description}</p>
+        </div>
+      ))}
+    </div>
+    
+    <!-- Tech Stack Badges -->
+    <div class="flex flex-wrap justify-center gap-4 mb-16">
+      {techStack.map(tech => (
+        <span class="px-4 py-2 rounded-full text-body-small bg-spent-soft text-spent-primary">{tech}</span>
+      ))}
+    </div>
+    
+    <!-- Gallery -->
+    {screenshots.length > 0 && (
+      <div class="mt-16">
+        <h3 class="font-heading text-h3 text-spent-navy text-center mb-8">App Screenshots</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {screenshots.map((shot, index) => (
+            <div class="text-center">
+              <div
+                class="inline-block bg-spent-primary rounded-3xl p-2 shadow-xl cursor-pointer hover:shadow-2xl transition-shadow duration-300"
+                data-gallery-image={index}
+              >
+                <div class="w-40 h-[280px] rounded-2xl overflow-hidden bg-spent-soft">
+                  {shot.image && screenshotAssets[shot.image as keyof typeof screenshotAssets] ? (() => {
+                    const img = screenshotAssets[shot.image as keyof typeof screenshotAssets];
+                    const optimized = getImage({ src: img, formats: ['webp', 'avif'], width: 160, height: 280 });
+                    return <img src={optimized.src} width={optimized.width} height={optimized.height} alt={shot.caption} loading="lazy" decoding="async" class="w-full h-full object-cover" />;
+                  })() : (
+                    <img
+                      src={`/images/app-screenshots/${shot.image}`}
+                      alt={shot.caption}
+                      loading="lazy"
+                      width={160}
+                      height={280}
+                      class="w-full h-full object-cover"
+                      decoding="async"
+                    />
+                  )}
+                </div>
+              </div>
+              <p class="mt-4 text-body-small text-spent-slate">{shot.caption}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+    
+    <!-- Google Play CTA -->
+    <div class="text-center mt-16">
+      <a
+        href={import.meta.env.GOOGLE_PLAY_URL || 'https://play.google.com/store/apps/details?id=com.anasidris.spent'}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-3 px-8 py-4 bg-spent-accent text-white font-heading text-lg rounded-md hover:bg-spent-accent-dark transition-colors duration-200 w-full sm:w-auto justify-center"
+        aria-label="Download Spent on Google Play"
+        onclick={() => {
+          if (typeof window !== 'undefined' && window.plausible) {
+            window.plausible('cta_click', { props: { action: 'download_app' } });
+          }
+        }}
+      >
+        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M3 20.5v-17c0-.83.55-1.53 1.3-1.8l10 5.5-10 5.5c-.75-.27-1.3-.97-1.3-1.8zm14.5-5.8l-3.75 2.05 3.75 2.05V14.7zm-3.75-6.2l3.75 2.05-3.75 2.05V8.5zM3 3.5v17c0 .83.55 1.53 1.3 1.8l10-5.5-10-5.5c-.75.27-1.3.97-1.3 1.8z" />
+        </svg>
+        Get it on Google Play
+      </a>
+    </div>
+  </div>
+</div>
+
+<script client:load>
+  // Gallery click handlers — open lightbox
+  const galleryItems = document.querySelectorAll('[data-gallery-image]');
+  
+  galleryItems.forEach((item) => {
+    item.addEventListener('click', () => {
+      const index = parseInt(item.getAttribute('data-gallery-image') || '0', 10);
+      
+      const images = Array.from(galleryItems).map((el, i) => {
+        const imgEl = el.querySelector('img');
+        const captionEl = el.nextElementSibling;
+        return {
+          src: imgEl?.src || '',
+          alt: imgEl?.alt || '',
+          caption: captionEl?.textContent?.trim() || '',
+        };
+      });
+      
+      if (window._openLightbox) {
+        window._openLightbox(index);
+      }
+    });
+  });
+</script>
