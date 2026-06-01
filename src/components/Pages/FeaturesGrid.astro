@@ -1,0 +1,19 @@
+---
+import type { ProjectFeature } from '../../lib';
+
+interface Props {
+  features: ProjectFeature[];
+}
+
+const { features } = Astro.props;
+---
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+  {features.map(feature => (
+    <div class="bg-professional-surface rounded-lg p-6 shadow-sm hover:shadow-lg transition-shadow duration-300">
+      <div class="text-3xl mb-4">{feature.icon}</div>
+      <h3 class="text-lg font-semibold text-professional-primary mb-2">{feature.title}</h3>
+      <p class="text-professional-text-secondary text-sm">{feature.description}</p>
+    </div>
+  ))}
+</div>

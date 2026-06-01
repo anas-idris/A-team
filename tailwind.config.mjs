@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     extend: {
@@ -15,8 +16,8 @@ export default {
           'alt-background': '#F8F9FA',
           surface: '#FFFFFF',
           'text-primary': '#2C3E50',
-          'text-secondary': '#7F8C8D',
-          'text-disabled': '#BDC3C7',
+          'text-secondary': '#5A6A6A',
+          'text-disabled': '#A0AEC0',
           border: '#E0E0E0',
           success: '#27AE60',
           error: '#E74C3C',
@@ -35,6 +36,29 @@ export default {
           slate: '#455A64', // Slate
           'light-slate': '#78909C', // LightSlate
           background: '#FAF9FF', // AppBackground
+        },
+        // Unified Brand (cross-section)
+        brand: {
+          primary: '#3F51B5',
+          'primary-dark': '#303F9F',
+          'primary-light': '#E8EAF6',
+          accent: '#FF4081',
+          'accent-dark': '#F50057',
+          background: '#FAF9FF',
+          'alt-background': '#F3F4F6',
+          'text-primary': '#1A237E',
+          'text-secondary': '#455A64',
+          border: '#E0E0E0',
+          surface: '#FFFFFF',
+        },
+        dark: {
+          background: '#0F172A',
+          'alt-background': '#1E293B',
+          surface: '#1E293B',
+          'text-primary': '#E2E8F0',
+          'text-secondary': '#94A3B8',
+          'text-disabled': '#64748B',
+          border: '#334155',
         },
       },
       spacing: {

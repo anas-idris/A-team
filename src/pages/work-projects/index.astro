@@ -1,0 +1,29 @@
+﻿---
+import BaseLayout from '../../components/Layout/BaseLayout.astro';
+import Header from '../../components/Layout/Header.astro';
+import Footer from '../../components/Layout/Footer.astro';
+import PageHeader from '../../components/Pages/PageHeader.astro';
+import WorkProjectCard from '../../components/Pages/WorkProjectCard.astro';
+import { socialLinks } from '../../lib';
+import { getWorkProjects } from '../../lib/services/projectService';
+
+const projects = getWorkProjects();
+---
+
+<BaseLayout title="Work Projects" description="Professional project portfolio by Anas Idris">
+  <Header />
+  
+  <section class="pt-32 pb-24">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <PageHeader title="Work Projects" description="Professional projects delivered across enterprise solutions, digital transformations, and team leadership." />
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        {projects.map(project => (
+          <WorkProjectCard project={project} />
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <Footer socialLinks={socialLinks} />
+</BaseLayout>

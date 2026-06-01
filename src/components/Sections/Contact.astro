@@ -4,9 +4,14 @@ interface ContactProps {
     email: string;
     phone: string;
   };
+  socialLinks?: Array<{
+    platform: string;
+    url: string;
+    icon: 'linkedin' | 'github' | 'twitter';
+  }>;
 }
 
-const { contactInfo = { email: 'bisquery@gmail.com', phone: '' } } = Astro.props;
+const { contactInfo = { email: 'bisquery@gmail.com', phone: '' }, socialLinks } = Astro.props;
 
 function validateEmail(email: string): boolean {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -14,137 +19,101 @@ function validateEmail(email: string): boolean {
 }
 ---
 
-<div class="bg-professional-alt-background py-16 md:py-24">
+<div class="bg-[#0a0a0a] py-24">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-12">
-      <h2 class="font-heading text-h2 text-professional-primary mb-4">Get in Touch</h2>
-      <p class="text-body-large text-professional-text-secondary max-w-2xl mx-auto">Have a question or want to work together? Reach out below.</p>
-    </div>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
-      <!-- Contact Info Panel -->
-      <div class="bg-professional-surface rounded-lg shadow-sm p-8">
-        <h3 class="font-heading text-h3 text-professional-primary mb-6">Contact Information</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-4xl mx-auto">
+      <!-- Contact Info -->
+      <div>
+        <h3 class="text-white text-lg mb-6">Contact</h3>
         <div class="space-y-6">
-          <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-lg bg-professional-accent/10 flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-professional-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <div>
-              <p class="text-body-small text-professional-text-disabled mb-1">Email</p>
-              <a href={`mailto:${contactInfo.email}`} class="text-professional-text-primary hover:text-professional-accent transition-colors duration-200" aria-label={`Send email to ${contactInfo.email}`}>{contactInfo.email}</a>
-            </div>
+          <div>
+            <p class="text-gray-600 text-xs font-mono mb-2">Email</p>
+            <a href={`mailto:${contactInfo.email}`} class="text-white text-sm hover:text-gray-300 transition-colors">{contactInfo.email}</a>
           </div>
           
           {contactInfo.phone && (
-            <div class="flex items-start gap-4">
-              <div class="w-10 h-10 rounded-lg bg-professional-accent/10 flex items-center justify-center flex-shrink-0">
-                <svg class="w-5 h-5 text-professional-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-              </div>
-              <div>
-                <p class="text-body-small text-professional-text-disabled mb-1">Phone</p>
-                <a href={`tel:${contactInfo.phone}`} class="text-professional-text-primary hover:text-professional-accent transition-colors duration-200" aria-label={`Call ${contactInfo.phone}`}>{contactInfo.phone}</a>
-              </div>
+            <div>
+              <p class="text-gray-600 text-xs font-mono mb-2">Phone</p>
+              <a href={`tel:${contactInfo.phone}`} class="text-white text-sm hover:text-gray-300 transition-colors">{contactInfo.phone}</a>
             </div>
           )}
           
-          <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-lg bg-professional-accent/10 flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-professional-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </div>
-            <div>
-              <p class="text-body-small text-professional-text-disabled mb-1">Location</p>
-              <p class="text-professional-text-primary">Available Worldwide (Remote)</p>
-            </div>
+          <div>
+            <p class="text-gray-600 text-xs font-mono mb-2">Location</p>
+            <p class="text-white text-sm">Available Worldwide (Remote)</p>
           </div>
         </div>
         
         <!-- Social Links -->
-        <div class="mt-10 pt-6 border-t border-professional-border">
-          <p class="text-body-small text-professional-text-disabled mb-4">Connect</p>
-          <div class="flex gap-4">
-            <a href="https://www.linkedin.com/in/anas-idris/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-professional-alt-background flex items-center justify-center hover:bg-professional-accent/10 hover:text-professional-accent transition-colors duration-200" aria-label="LinkedIn">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>
-            </a>
+        <div class="mt-10 pt-6 border-t border-[#1a1a1a]">
+          <p class="text-gray-600 text-xs font-mono mb-4">Connect</p>
+          <div class="flex gap-6">
+            {socialLinks.map(link => (
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-gray-500 hover:text-white transition-colors duration-200 text-sm"
+                aria-label={link.platform}
+              >
+                {link.platform}
+              </a>
+            ))}
           </div>
         </div>
       </div>
       
       <!-- Contact Form -->
-      <div class="bg-professional-surface rounded-lg shadow-sm p-8">
+      <div>
         <form id="contact-form" class="space-y-5" action="/" method="POST" netlify name="contact">
           <input type="hidden" name="form-name" value="contact" />
           
-          <!-- Hidden honeypot -->
           <p class="hidden">
             <label>Don't fill this out: <input name="website" tabindex="-1" autocomplete="off" /></label>
           </p>
           
-          <!-- Name -->
           <div>
-            <label for="name" class="block text-body-small font-heading text-professional-primary mb-2">Name</label>
-            <input type="text" id="name" name="name" required placeholder="Your name" aria-describedby="name-error" class="w-full px-4 py-2 border border-professional-border rounded-md focus:ring-2 focus:ring-professional-accent focus:border-transparent" />
-            <p id="name-error" class="mt-1 text-body-small text-professional-error hidden" role="alert"></p>
+            <label for="name" class="block text-xs font-mono text-gray-600 mb-2">Name</label>
+            <input type="text" id="name" name="name" required placeholder="Your name" class="w-full px-0 py-2 bg-transparent border-b border-[#222] text-white text-sm focus:border-white focus:outline-none transition-colors" />
           </div>
           
-          <!-- Email -->
           <div>
-            <label for="email" class="block text-body-small font-heading text-professional-primary mb-2">Email</label>
-            <input type="email" id="email" name="email" required placeholder="your@email.com" aria-describedby="email-error" class="w-full px-4 py-2 border border-professional-border rounded-md focus:ring-2 focus:ring-professional-accent focus:border-transparent" />
-            <p id="email-error" class="mt-1 text-body-small text-professional-error hidden" role="alert"></p>
+            <label for="email" class="block text-xs font-mono text-gray-600 mb-2">Email</label>
+            <input type="email" id="email" name="email" required placeholder="your@email.com" class="w-full px-0 py-2 bg-transparent border-b border-[#222] text-white text-sm focus:border-white focus:outline-none transition-colors" />
           </div>
           
-          <!-- Subject -->
           <div>
-            <label for="subject" class="block text-body-small font-heading text-professional-primary mb-2">Subject</label>
-            <input type="text" id="subject" name="subject" required placeholder="Subject" aria-describedby="subject-error" class="w-full px-4 py-2 border border-professional-border rounded-md focus:ring-2 focus:ring-professional-accent focus:border-transparent" />
-            <p id="subject-error" class="mt-1 text-body-small text-professional-error hidden" role="alert"></p>
+            <label for="subject" class="block text-xs font-mono text-gray-600 mb-2">Subject</label>
+            <input type="text" id="subject" name="subject" required placeholder="Subject" class="w-full px-0 py-2 bg-transparent border-b border-[#222] text-white text-sm focus:border-white focus:outline-none transition-colors" />
           </div>
           
-          <!-- Message -->
           <div>
-            <label for="message" class="block text-body-small font-heading text-professional-primary mb-2">Message</label>
-            <textarea id="message" name="message" required rows="4" placeholder="Your message" maxlength="500" aria-describedby="message-error char-count" class="w-full px-4 py-2 border border-professional-border rounded-md focus:ring-2 focus:ring-professional-accent focus:border-transparent"></textarea>
+            <label for="message" class="block text-xs font-mono text-gray-600 mb-2">Message</label>
+            <textarea id="message" name="message" required rows="4" placeholder="Your message" maxlength="500" class="w-full px-0 py-2 bg-transparent border-b border-[#222] text-white text-sm focus:border-white focus:outline-none transition-colors resize-none"></textarea>
             <div class="flex justify-between mt-1">
-              <p id="message-error" class="text-body-small text-professional-error hidden" role="alert"></p>
-              <p id="char-count" class="text-body-small text-professional-text-disabled ml-auto" aria-live="polite">0 / 500</p>
+              <p id="message-error" class="text-xs text-red-500 hidden" role="alert"></p>
+              <p id="char-count" class="text-xs text-gray-600 font-mono ml-auto" aria-live="polite">0 / 500</p>
             </div>
           </div>
           
-          <!-- Submit Button -->
-          <button type="submit" id="submit-btn" class="w-full px-6 py-3 rounded-md bg-professional-accent text-white font-heading hover:bg-professional-accent-dark transition-colors duration-200 flex items-center justify-center gap-2">
+          <button type="submit" id="submit-btn" class="w-full px-6 py-3 bg-white/10 text-white text-sm hover:bg-white/20 transition-colors rounded flex items-center justify-center gap-2">
             <span class="btn-text">Send Message</span>
-            <svg id="submit-spinner" class="animate-spin h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg id="submit-spinner" class="animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
           </button>
         </form>
         
-        <!-- Success Message -->
-        <div id="success-message" class="hidden mt-4 p-4 rounded-lg bg-professional-success/10 border border-professional-success">
+        <div id="success-message" class="hidden mt-4 p-4 rounded bg-white/5 border border-white/10">
           <div class="flex items-center gap-3">
-            <svg class="w-5 h-5 text-professional-success flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-            <p class="text-professional-success text-body-small font-heading">Message sent successfully! I'll get back to you soon.</p>
+            <p class="text-white text-sm">Message sent! I'll get back to you soon.</p>
           </div>
         </div>
         
-        <!-- Error Message -->
-        <div id="error-message" class="hidden mt-4 p-4 rounded-lg bg-professional-error/10 border border-professional-error">
+        <div id="error-message" class="hidden mt-4 p-4 rounded bg-red-500/10 border border-red-500/20">
           <div class="flex items-center gap-3">
-            <svg class="w-5 h-5 text-professional-error flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-            <p class="text-professional-error text-body-small font-heading">Something went wrong. Please try again.</p>
+            <p class="text-red-500 text-sm">Something went wrong. Please try again.</p>
           </div>
         </div>
       </div>
@@ -162,27 +131,13 @@ function validateEmail(email: string): boolean {
   const charCount = document.getElementById('char-count');
   const messageInput = document.getElementById('message');
 
-  // Character counter
   messageInput?.addEventListener('input', () => {
     const count = messageInput.value.length;
     charCount.textContent = `${count} / 500`;
     if (count > 450) {
-      charCount.className = 'text-body-small text-professional-error ml-auto';
+      charCount.className = 'text-xs text-red-500 font-mono ml-auto';
     } else {
-      charCount.className = 'text-body-small text-professional-text-disabled ml-auto';
-    }
-  });
-
-  // Real-time email validation
-  const emailInput = document.getElementById('email');
-  emailInput?.addEventListener('blur', () => {
-    const emailError = document.getElementById('email-error');
-    if (emailInput.value && !validateEmail(emailInput.value)) {
-      emailError.classList.remove('hidden');
-      emailInput.classList.add('border-professional-error');
-    } else {
-      emailError.classList.add('hidden');
-      emailInput.classList.remove('border-professional-error');
+      charCount.className = 'text-xs text-gray-600 font-mono ml-auto';
     }
   });
 
@@ -191,32 +146,12 @@ function validateEmail(email: string): boolean {
     return re.test(email);
   }
 
-  // Real-time validation
-  const nameInput = document.getElementById('name');
-  const subjectInput = document.getElementById('subject');
-  
-  [nameInput, subjectInput].forEach(input => {
-    input?.addEventListener('blur', () => {
-      const errorId = `${input?.id}-error`;
-      const errorEl = document.getElementById(errorId);
-      if (input?.value && input.value.trim().length > 0) {
-        errorEl.classList.add('hidden');
-        input.classList.remove('border-professional-error');
-      }
-    });
-  });
-
-  // Form submission
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    // Clear previous messages
     successMsg.classList.add('hidden');
     errorMsg.classList.add('hidden');
 
-    // Validate all fields
     let isValid = true;
-    
     const nameInput = document.getElementById('name');
     const emailInput = document.getElementById('email');
     const subjectInput = document.getElementById('subject');
@@ -232,24 +167,24 @@ function validateEmail(email: string): boolean {
     validators.forEach(({ input, errorId, message }) => {
       const errorEl = document.getElementById(errorId);
       if (!input.value.trim()) {
-        errorEl.textContent = message;
-        errorEl.classList.remove('hidden');
-        input.classList.add('border-professional-error');
+        if (errorEl) {
+          errorEl.textContent = message;
+          errorEl.classList.remove('hidden');
+        }
         isValid = false;
       } else if (input.id === 'email' && !validateEmail(input.value)) {
-        errorEl.textContent = message;
-        errorEl.classList.remove('hidden');
-        input.classList.add('border-professional-error');
+        if (errorEl) {
+          errorEl.textContent = message;
+          errorEl.classList.remove('hidden');
+        }
         isValid = false;
-      } else {
+      } else if (errorEl) {
         errorEl.classList.add('hidden');
-        input.classList.remove('border-professional-error');
       }
     });
 
     if (!isValid) return;
 
-    // Set loading state
     submitBtn.disabled = true;
     spinner.classList.remove('hidden');
     btnText.textContent = 'Sending...';
@@ -266,13 +201,9 @@ function validateEmail(email: string): boolean {
         successMsg.classList.remove('hidden');
         form.reset();
         charCount.textContent = '0 / 500';
-        
-        // Track Plausible event
         if (typeof window !== 'undefined' && window.plausible) {
           window.plausible('form_submit', { props: { section: 'contact' } });
         }
-
-        // Auto-hide success message after 5 seconds
         setTimeout(() => {
           successMsg.classList.add('hidden');
         }, 5000);

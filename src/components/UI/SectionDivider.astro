@@ -1,0 +1,16 @@
+---
+interface SectionDividerProps {
+  fromColor?: string;
+  toColor?: string;
+}
+
+const {
+  fromColor = 'white',
+  toColor = 'spent-background',
+} = Astro.props;
+---
+
+<div
+  class="w-full h-px bg-gradient-to-r from-transparent via-professional-border/30 to-transparent dark:via-dark-border/30"
+  aria-hidden="true"
+/>

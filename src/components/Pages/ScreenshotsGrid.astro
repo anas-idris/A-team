@@ -1,0 +1,27 @@
+---
+import type { AppScreenshot } from '../../lib';
+
+interface Props {
+  screenshots: AppScreenshot[];
+}
+
+const { screenshots } = Astro.props;
+---
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+  {screenshots.map(shot => (
+    <div class="text-center">
+      <div class="inline-block bg-gray-900 rounded-3xl p-2 shadow-xl">
+        <div class="relative w-40 h-[312px] rounded-2xl overflow-hidden">
+          <div class="absolute top-1.5 left-1/2 -translate-x-1/2 w-12 h-3 bg-gray-900 rounded-full z-10"></div>
+          <img
+            src={shot.image}
+            alt={shot.caption}
+            class="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+      <p class="mt-4 text-sm text-professional-text-secondary font-medium">{shot.caption}</p>
+    </div>
+  ))}
+</div>

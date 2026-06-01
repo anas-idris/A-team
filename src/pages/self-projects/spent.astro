@@ -1,0 +1,49 @@
+﻿---
+import BaseLayout from '../../components/Layout/BaseLayout.astro';
+import Header from '../../components/Layout/Header.astro';
+import Footer from '../../components/Layout/Footer.astro';
+import ProductHero from '../../components/Pages/ProductHero.astro';
+import FeaturesGrid from '../../components/Pages/FeaturesGrid.astro';
+import ScreenshotsGrid from '../../components/Pages/ScreenshotsGrid.astro';
+import PageHeader from '../../components/Pages/PageHeader.astro';
+import { socialLinks } from '../../lib';
+import { getSpentProject } from '../../lib/services/projectService';
+
+const project = getSpentProject();
+---
+
+<BaseLayout title={project.title} description="Personal project and application by Anas Idris">
+  <Header />
+  
+  <!-- Project Hero -->
+  <section class="pt-32 pb-16">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <a href="/self-projects" class="inline-flex items-center text-professional-text-secondary hover:text-professional-accent transition-colors mb-8">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to Projects
+      </a>
+      
+      <ProductHero project={project} />
+    </div>
+  </section>
+  
+  <!-- Features Grid -->
+  <section class="py-16 bg-professional-alt-background">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <PageHeader title="Key Features" description="" />
+      <FeaturesGrid features={project.features} />
+    </div>
+  </section>
+  
+  <!-- App Screenshots -->
+  <section class="py-16">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <PageHeader title="App Screenshots" description="" />
+      <ScreenshotsGrid screenshots={project.screenshots} />
+    </div>
+  </section>
+  
+  <Footer socialLinks={socialLinks} />
+</BaseLayout>

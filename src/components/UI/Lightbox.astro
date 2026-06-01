@@ -18,7 +18,7 @@ const currentImage = images[activeIndex];
 ---
 
 <div
-  class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80"
+  class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 transition-opacity duration-200"
   role="dialog"
   aria-modal="true"
   aria-label="Image viewer"
@@ -36,18 +36,18 @@ const currentImage = images[activeIndex];
     onclick={onClose}
     aria-label="Close image viewer"
   >
-    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
     </svg>
   </button>
   
   <!-- Previous arrow -->
   <button
-    class="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 text-white hover:text-professional-accent transition-colors duration-200"
+    class="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-2 text-white hover:text-professional-accent transition-colors duration-200"
     onclick={onPrev}
     aria-label="Previous image"
   >
-    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
     </svg>
   </button>
@@ -71,11 +71,11 @@ const currentImage = images[activeIndex];
   
   <!-- Next arrow -->
   <button
-    class="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 text-white hover:text-professional-accent transition-colors duration-200"
+    class="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-2 text-white hover:text-professional-accent transition-colors duration-200"
     onclick={onNext}
     aria-label="Next image"
   >
-    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
     </svg>
   </button>
@@ -103,12 +103,15 @@ const currentImage = images[activeIndex];
   
   // Store for cleanup
   (document as any)._lightboxHandler = handleKeyDown;
+  (document.body as any)._originalOverflow = document.body.style.overflow;
+  document.body.style.overflow = 'hidden';
 </script>
 
 <script client:load>
   // Restore body scroll when lightbox closes
   const checkClose = () => {
-    if (!document.querySelector('.fixed.inset-0.z-\\[100\\]')) {
+    const lightboxEl = document.querySelector('[role="dialog"][aria-label="Image viewer"]');
+    if (!lightboxEl) {
       document.body.style.overflow = (document.body as any)._originalOverflow || '';
       document.removeEventListener('keydown', (document as any)._lightboxHandler);
     }

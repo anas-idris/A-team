@@ -1,0 +1,15 @@
+---
+import type { SocialLink } from '../../lib';
+
+interface Props {
+  socialLinks: SocialLink[];
+}
+
+const { socialLinks } = Astro.props;
+---
+
+<div class="flex flex-wrap gap-3">
+  {socialLinks?.map(skill => (
+    <span class="px-4 py-2 rounded-full text-sm bg-professional-accent/10 text-professional-accent font-medium">{skill}</span>
+  ))}
+</div>

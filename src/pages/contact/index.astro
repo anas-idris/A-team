@@ -1,0 +1,32 @@
+﻿---
+import BaseLayout from '../../components/Layout/BaseLayout.astro';
+import Header from '../../components/Layout/Header.astro';
+import Footer from '../../components/Layout/Footer.astro';
+import ContactPanel from '../../components/Pages/ContactPanel.astro';
+import ContactForm from '../../components/Pages/ContactForm.astro';
+import PageHeader from '../../components/Pages/PageHeader.astro';
+import { socialLinks, contactInfo } from '../../lib';
+---
+
+<BaseLayout title="Contact" description="Get in touch with Anas Idris">
+  <Header />
+  
+  <section class="pt-32 pb-24">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold text-professional-primary mb-4">Get in Touch</h1>
+        <p class="text-xl text-professional-text-secondary max-w-2xl mx-auto">Have a question or want to work together? Reach out below.</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+        <ContactPanel socialLinks={socialLinks} contactInfo={contactInfo} />
+        
+        <div class="bg-professional-surface rounded-lg shadow-sm p-8 border border-professional-border">
+          <ContactForm maxChars={500} />
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <Footer socialLinks={socialLinks} />
+</BaseLayout>

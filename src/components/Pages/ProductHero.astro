@@ -1,0 +1,48 @@
+---
+import type { ProductProject } from '../../lib';
+
+interface Props {
+  project: ProductProject;
+}
+
+const { project } = Astro.props;
+---
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+  <div>
+    <span class="inline-block px-4 py-2 rounded-full text-sm font-medium bg-professional-accent/10 text-professional-accent mb-4">Mobile App</span>
+    <h1 class="text-4xl md:text-5xl font-bold text-professional-primary mb-4">{project.title}</h1>
+    <p class="text-lg text-professional-accent mb-4 font-medium">{project.tagline}</p>
+    <p class="text-professional-text-secondary leading-relaxed mb-8">{project.description}</p>
+    
+    <div class="flex flex-wrap gap-3 mb-8">
+      {project.techStack.map(tech => (
+        <span class="px-4 py-2 rounded-full text-sm bg-professional-alt-background text-professional-text-secondary font-medium">{tech}</span>
+      ))}
+    </div>
+    
+    <a
+      href={project.googlePlayUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center gap-3 px-8 py-4 bg-professional-accent text-white font-medium rounded-lg hover:bg-professional-accent-dark transition-colors"
+    >
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3 20.5v-17c0-.83.55-1.53 1.3-1.8l10 5.5-10 5.5c-.75-.27-1.3-.97-1.3-1.8zm14.5-5.8l-3.75 2.05 3.75 2.05V14.7zm-3.75-6.2l3.75 2.05-3.75 2.05V8.5zM3 3.5v17c0 .83.55 1.53 1.3 1.8l10-5.5-10-5.5c-.75-.27-1.3.97-1.3 1.8z" />
+      </svg>
+      Get it on Google Play
+    </a>
+  </div>
+  
+  <!-- Device Mockup -->
+  <div class="flex justify-center">
+    <div class="relative">
+      <div class="bg-gray-900 rounded-[2.5rem] p-3 shadow-2xl">
+        <div class="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-7 bg-gray-900 rounded-full z-10"></div>
+        <div class="relative bg-white rounded-[2rem] overflow-hidden" style="width: 280px; height: 480px;">
+          <img src={project.screenshots[0].image} alt="Spent app home screen" class="w-full h-full object-cover" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

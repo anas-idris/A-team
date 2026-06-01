@@ -1,0 +1,65 @@
+---
+interface Props {
+  maxChars?: number;
+}
+
+const { maxChars = 500 } = Astro.props;
+---
+
+<form id="contact-form" class="space-y-5" action="/" method="POST" netlify name="contact">
+  <input type="hidden" name="form-name" value="contact" />
+  
+  <p class="hidden">
+    <label>Don't fill this out: <input name="website" tabindex="-1" autocomplete="off" /></label>
+  </p>
+  
+  <div>
+    <label for="name" class="block text-sm font-medium text-professional-primary mb-2">Name</label>
+    <input type="text" id="name" name="name" required placeholder="Your name" class="w-full px-4 py-2 border border-professional-border rounded-md focus:ring-2 focus:ring-professional-accent focus:border-transparent" />
+  </div>
+  
+  <div>
+    <label for="email" class="block text-sm font-medium text-professional-primary mb-2">Email</label>
+    <input type="email" id="email" name="email" required placeholder="your@email.com" class="w-full px-4 py-2 border border-professional-border rounded-md focus:ring-2 focus:ring-professional-accent focus:border-transparent" />
+  </div>
+  
+  <div>
+    <label for="subject" class="block text-sm font-medium text-professional-primary mb-2">Subject</label>
+    <input type="text" id="subject" name="subject" required placeholder="Subject" class="w-full px-4 py-2 border border-professional-border rounded-md focus:ring-2 focus:ring-professional-accent focus:border-transparent" />
+  </div>
+  
+  <div>
+    <label for="message" class="block text-sm font-medium text-professional-primary mb-2">Message</label>
+    <textarea id="message" name="message" required rows="4" placeholder="Your message" maxlength={maxChars} class="w-full px-4 py-2 border border-professional-border rounded-md focus:ring-2 focus:ring-professional-accent focus:border-transparent resize-none"></textarea>
+    <div class="flex justify-between mt-1">
+      <p id="message-error" class="text-sm text-professional-error hidden" role="alert"></p>
+      <p id="char-count" class="text-sm text-professional-text-disabled ml-auto" aria-live="polite">0 / {maxChars}</p>
+    </div>
+  </div>
+  
+  <button type="submit" id="submit-btn" class="w-full px-6 py-3 rounded-md bg-professional-accent text-white font-medium hover:bg-professional-accent-dark transition-colors duration-200 flex items-center justify-center gap-2">
+    <span class="btn-text">Send Message</span>
+    <svg id="submit-spinner" class="animate-spin h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+  </button>
+</form>
+
+<div id="success-message" class="hidden mt-4 p-4 rounded-lg bg-professional-success/10 border border-professional-success">
+  <div class="flex items-center gap-3">
+    <svg class="w-5 h-5 text-professional-success flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+    </svg>
+    <p class="text-professional-success text-sm font-medium">Message sent successfully! I'll get back to you soon.</p>
+  </div>
+</div>
+
+<div id="error-message" class="hidden mt-4 p-4 rounded-lg bg-professional-error/10 border border-professional-error">
+  <div class="flex items-center gap-3">
+    <svg class="w-5 h-5 text-professional-error flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+    <p class="text-professional-error text-sm font-medium">Something went wrong. Please try again.</p>
+  </div>
+</div>
