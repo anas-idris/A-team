@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
+import tailwind from '@astrojs/tailwind'; // v4.16.19
 
 export default defineConfig({
   site: 'https://anasidris.co.in',
