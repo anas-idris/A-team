@@ -7,55 +7,55 @@ export default {
       colors: {
         // Professional Colors (Home + Contact Pages)
         professional: {
-          primary: '#2C3E50',
-          'primary-dark': '#1A252F',
-          'primary-light': '#ECF0F1',
-          accent: '#3498DB',
-          'accent-dark': '#2980B9',
+          primary: '#0F172A',
+          'primary-dark': '#020617',
+          'primary-light': '#F1F5F9',
+          accent: '#6366F1',
+          'accent-dark': '#4F46E5',
           background: '#FFFFFF',
-          'alt-background': '#F8F9FA',
+          'alt-background': '#F8FAFC',
           surface: '#FFFFFF',
-          'text-primary': '#2C3E50',
-          'text-secondary': '#5A6A6A',
-          'text-disabled': '#A0AEC0',
-          border: '#E0E0E0',
-          success: '#27AE60',
-          error: '#E74C3C',
+          'text-primary': '#0F172A',
+          'text-secondary': '#475569',
+          'text-disabled': '#94A3B8',
+          border: '#E2E8F0',
+          success: '#059669',
+          error: '#DC2626',
         },
         // Spent App Colors (Product Page)
         spent: {
-          primary: '#3F51B5', // DeepIndigo
-          'primary-dark': '#303F9F',
-          bright: '#5C6BC0', // BrightIndigo
-          soft: '#E8EAF6', // SoftIndigo
-          accent: '#FF4081', // HotPink
-          'accent-dark': '#F50057',
-          'mint-green': '#00BFA5', // MintGreen
-          coral: '#FF5252', // Coral
-          navy: '#1A237E', // Navy
-          slate: '#455A64', // Slate
-          'light-slate': '#78909C', // LightSlate
-          background: '#FAF9FF', // AppBackground
+          primary: '#1E3A5F', // Deep Navy
+          'primary-dark': '#0F2440',
+          bright: '#2563EB', // Royal Blue
+          soft: '#EFF6FF', // Light Blue
+          accent: '#0891B2', // Teal
+          'accent-dark': '#0E7490',
+          'mint-green': '#059669', // Emerald
+          coral: '#DC2626', // Red
+          navy: '#1E3A5F', // Navy
+          slate: '#475569', // Slate
+          'light-slate': '#64748B', // Light Slate
+          background: '#FFFFFF', // White
         },
         // Unified Brand (cross-section)
         brand: {
-          primary: '#3F51B5',
-          'primary-dark': '#303F9F',
-          'primary-light': '#E8EAF6',
-          accent: '#FF4081',
-          'accent-dark': '#F50057',
-          background: '#FAF9FF',
-          'alt-background': '#F3F4F6',
-          'text-primary': '#1A237E',
-          'text-secondary': '#455A64',
-          border: '#E0E0E0',
+          primary: '#0F172A',
+          'primary-dark': '#020617',
+          'primary-light': '#F1F5F9',
+          accent: '#6366F1',
+          'accent-dark': '#4F46E5',
+          background: '#FFFFFF',
+          'alt-background': '#F8FAFC',
+          'text-primary': '#0F172A',
+          'text-secondary': '#475569',
+          border: '#E2E8F0',
           surface: '#FFFFFF',
         },
         dark: {
-          background: '#0F172A',
+          background: '#0B1120',
           'alt-background': '#1E293B',
           surface: '#1E293B',
-          'text-primary': '#E2E8F0',
+          'text-primary': '#F1F5F9',
           'text-secondary': '#94A3B8',
           'text-disabled': '#64748B',
           border: '#334155',
