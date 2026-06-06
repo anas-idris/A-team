@@ -33,7 +33,7 @@ const {
       </nav>
 
       <button
-        class="md:hidden p-2 text-professional-text-primary hover:text-professional-accent"
+        class="md:hidden p-3 text-professional-text-primary hover:text-professional-accent active:text-professional-accent z-50"
         aria-label="Open navigation menu"
         aria-expanded="false"
         id="hamburger-btn"
@@ -45,119 +45,144 @@ const {
     </div>
 
     <div
-      id="mobile-menu"
-      class="hidden md:hidden overflow-hidden transition-all duration-300 ease-in-out"
-      style="max-height: 0px; opacity: 0;"
-    >
-      <nav role="navigation" aria-label="Mobile navigation">
-        {navLinks.map(link => (
-          <a
-            href={link.href}
-            class="block py-3 text-professional-text-secondary hover:text-professional-accent focus:outline-none focus:ring-2 focus:ring-professional-accent nav-link"
-            data-nav-link
-          >
-            {link.label}
-          </a>
-        ))}
-      </nav>
-    </div>
+       id="mobile-menu"
+       class="hidden md:hidden overflow-hidden transition-all duration-300 ease-in-out"
+       style="max-height: 0px; opacity: 0;"
+     >
+       <nav role="navigation" aria-label="Mobile navigation" class="border-t border-professional-border">
+         {navLinks.map(link => (
+           <a
+             href={link.href}
+             class="block py-4 px-4 text-professional-text-secondary hover:text-professional-accent hover:bg-professional-alt-background active:text-professional-accent active:bg-professional-alt-background transition-colors duration-200 nav-link text-sm font-medium"
+             data-nav-link
+             style="touch-action: manipulation;"
+           >
+             {link.label}
+           </a>
+         ))}
+       </nav>
+     </div>
   </div>
 </header>
 
-<script client:load>
-  const hamburger = document.getElementById('hamburger-btn');
-  const mobileMenu = document.getElementById('mobile-menu');
-
-  hamburger?.addEventListener('click', () => {
-    const isHidden = mobileMenu!.classList.contains('hidden');
+<script client:visible>
+  function initMobileMenu() {
+    const hamburger = document.getElementById('hamburger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
     
-    if (isHidden) {
-      mobileMenu!.classList.remove('hidden');
-      requestAnimationFrame(() => {
-        const height = mobileMenu!.scrollHeight;
-        mobileMenu!.style.maxHeight = height + 'px';
-        mobileMenu!.style.opacity = '1';
+    if (!hamburger || !mobileMenu) return;
+
+    let isMenuOpen = false;
+
+    function toggleMenu() {
+      isMenuOpen = !isMenuOpen;
+      
+      if (isMenuOpen) {
+        mobileMenu.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          const height = mobileMenu.scrollHeight;
+          mobileMenu.style.maxHeight = height + 'px';
+          mobileMenu.style.opacity = '1';
+          setTimeout(() => {
+            if (isMenuOpen && mobileMenu) {
+              mobileMenu.style.maxHeight = '';
+            }
+          }, 300);
+        });
+        hamburger.setAttribute('aria-expanded', 'true');
+        hamburger.setAttribute('aria-label', 'Close navigation menu');
+        document.body.style.overflow = 'hidden';
+      } else {
+        mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+        requestAnimationFrame(() => {
+          mobileMenu.style.maxHeight = '0px';
+          mobileMenu.style.opacity = '0';
+        });
         setTimeout(() => {
-          if (!mobileMenu!.classList.contains('hidden')) {
-            mobileMenu!.style.maxHeight = '';
+          if (!isMenuOpen && mobileMenu) {
+            mobileMenu.classList.add('hidden');
+            mobileMenu.style.maxHeight = '';
           }
         }, 300);
-      });
-      hamburger.setAttribute('aria-expanded', 'true');
-      hamburger.setAttribute('aria-label', 'Close navigation menu');
-    } else {
-      mobileMenu!.style.maxHeight = mobileMenu!.scrollHeight + 'px';
-      requestAnimationFrame(() => {
-        mobileMenu!.style.maxHeight = '0px';
-        mobileMenu!.style.opacity = '0';
-      });
-      setTimeout(() => {
-        if (!mobileMenu!.classList.contains('hidden')) {
-          mobileMenu!.classList.add('hidden');
-        }
-      }, 300);
-      hamburger.setAttribute('aria-expanded', 'false');
-      hamburger.setAttribute('aria-label', 'Open navigation menu');
+        hamburger.setAttribute('aria-expanded', 'false');
+        hamburger.setAttribute('aria-label', 'Open navigation menu');
+        document.body.style.overflow = '';
+      }
     }
-  });
 
-  hamburger?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+    hamburger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMenu();
+    });
+
+    hamburger.addEventListener('touchend', (e) => {
+      e.stopPropagation();
       e.preventDefault();
-      hamburger.click();
-    }
-  });
-
-  document.querySelectorAll('[data-nav-link]').forEach(link => {
-    link.addEventListener('click', () => {
-      mobileMenu?.classList.add('hidden');
-      hamburger?.setAttribute('aria-expanded', 'false');
-      hamburger?.setAttribute('aria-label', 'Open navigation menu');
+      toggleMenu();
     });
 
-    link.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        link.click();
+    document.querySelectorAll('[data-nav-link]').forEach(link => {
+      link.addEventListener('click', () => {
+        if (isMenuOpen) {
+          toggleMenu();
+        }
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (isMenuOpen && !mobileMenu.contains(e.target) && !hamburger.contains(e.target)) {
+        toggleMenu();
       }
     });
-  });
 
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('[data-nav-link]');
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isMenuOpen) {
+        toggleMenu();
+      }
+    });
 
-  const setActiveLink = (href) => {
-    navLinks.forEach(link => {
-      const isActive = link.getAttribute('href') === href;
-      if (isActive) {
-        link.className = 'text-professional-accent font-semibold transition-colors duration-200 nav-link text-sm font-medium';
-        link.setAttribute('aria-current', 'page');
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('[data-nav-link]');
+
+    const setActiveLink = (href) => {
+      navLinks.forEach(link => {
+        const isActive = link.getAttribute('href') === href;
+        if (isActive) {
+          link.className = 'text-professional-accent font-semibold transition-colors duration-200 nav-link text-sm font-medium';
+          link.setAttribute('aria-current', 'page');
+        } else {
+          link.className = 'text-professional-text-secondary hover:text-professional-accent transition-colors duration-200 nav-link text-sm font-medium';
+          link.removeAttribute('aria-current');
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          setActiveLink(id);
+        }
+      });
+    }, { rootMargin: '-30% 0px -70% 0px' });
+
+    sections.forEach(section => observer.observe(section));
+
+    const header = document.querySelector('header');
+
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.scrollY;
+      if (currentScroll > 100) {
+        header?.classList.add('shadow-md');
       } else {
-        link.className = 'text-professional-text-secondary hover:text-professional-accent transition-colors duration-200 nav-link text-sm font-medium';
-        link.removeAttribute('aria-current');
+        header?.classList.remove('shadow-md');
       }
-    });
-  };
+    }, { passive: true });
+  }
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.getAttribute('id');
-        setActiveLink(id);
-      }
-    });
-  }, { rootMargin: '-30% 0px -70% 0px' });
-
-  sections.forEach(section => observer.observe(section));
-
-  const header = document.querySelector('header');
-
-  window.addEventListener('scroll', () => {
-    const currentScroll = window.scrollY;
-    if (currentScroll > 100) {
-      header?.classList.add('shadow-md');
-    } else {
-      header?.classList.remove('shadow-md');
-    }
-  }, { passive: true });
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+  } else {
+    initMobileMenu();
+  }
 </script>

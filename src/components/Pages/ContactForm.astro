@@ -4,10 +4,10 @@ interface Props {
 }
 
 const { maxChars = 500 } = Astro.props;
+const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_ENDPOINT || '/';
 ---
 
-<form id="contact-form" class="space-y-5" action="/" method="POST" netlify name="contact">
-  <input type="hidden" name="form-name" value="contact" />
+<form id="contact-form" class="space-y-5" action={formspreeEndpoint} method="POST">
   
   <p class="hidden">
     <label>Don't fill this out: <input name="website" tabindex="-1" autocomplete="off" /></label>
@@ -63,3 +63,98 @@ const { maxChars = 500 } = Astro.props;
     <p class="text-professional-error text-sm font-medium">Something went wrong. Please try again.</p>
   </div>
 </div>
+
+<script client:load>
+  const form = document.getElementById('contact-form');
+  const submitBtn = document.getElementById('submit-btn');
+  const spinner = document.getElementById('submit-spinner');
+  const btnText = document.querySelector('.btn-text');
+  const successMsg = document.getElementById('success-message');
+  const errorMsg = document.getElementById('error-message');
+  const charCount = document.getElementById('char-count');
+  const messageInput = document.getElementById('message');
+  const messageError = document.getElementById('message-error');
+
+  messageInput.addEventListener('input', () => {
+    const count = messageInput.value.length;
+    charCount.textContent = `${count} / ${maxChars}`;
+    
+    if (count > maxChars) {
+      messageError.textContent = `Message must not exceed ${maxChars} characters.`;
+      messageError.classList.remove('hidden');
+    } else {
+      messageError.classList.add('hidden');
+    }
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    successMsg.classList.add('hidden');
+    errorMsg.classList.add('hidden');
+
+    const name = form.name.value;
+    const email = form.email.value;
+    const subject = form.subject.value;
+    const message = form.message.value;
+
+    if (!name.trim()) {
+      alert('Please enter your name.');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    if (!subject.trim()) {
+      alert('Please enter a subject.');
+      return;
+    }
+
+    if (!message.trim()) {
+      messageError.textContent = 'Please enter a message.';
+      messageError.classList.remove('hidden');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    spinner.classList.remove('hidden');
+    btnText.textContent = 'Sending...';
+
+    const formData = new URLSearchParams();
+    formData.append('_subject', 'New contact message from ' + name);
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('subject', subject);
+    formData.append('message', message);
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData,
+      });
+
+      if (response.ok || response.status === 302) {
+        successMsg.classList.remove('hidden');
+        form.reset();
+        charCount.textContent = `0 / ${maxChars}`;
+        setTimeout(() => {
+          successMsg.classList.add('hidden');
+        }, 5000);
+      } else {
+        errorMsg.classList.remove('hidden');
+      }
+    } catch (error) {
+      errorMsg.classList.remove('hidden');
+    } finally {
+      submitBtn.disabled = false;
+      spinner.classList.add('hidden');
+      btnText.textContent = 'Send Message';
+    }
+  });
+</script>

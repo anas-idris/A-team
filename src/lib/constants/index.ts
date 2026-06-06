@@ -123,7 +123,7 @@ export const spentProject: ProductProject = {
     { icon: '\uD83D\uDCCA', title: 'Deep Insights', description: 'Visual analytics and spending pattern analysis.' },
     { icon: '\uD83C\uDFAD', title: 'Multi-Vendor', description: 'Support for multiple expense categories and vendors.' },
     { icon: '\uD83D\uDCC8', title: 'Trends Analysis', description: 'Track spending trends over time with interactive charts.' },
-    { icon: '\uD83D\uDD12', title: 'Secure Backup', description: 'Cloud backup and restore for your financial data.' },
+    { icon: '\uD83D\uDD12', title: 'Secure Backup', description: 'Export and import backup files to save your data locally on your device.' },
   ],
   techStack: ['Kotlin', 'Jetpack Compose', 'Room Database', 'MVVM', 'Coroutines'],
   screenshots: [

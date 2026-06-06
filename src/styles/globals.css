@@ -21,6 +21,7 @@
 
 html {
   scroll-behavior: smooth;
+  overscroll-behavior-x: none;
 }
 
 body {
@@ -31,6 +32,19 @@ body {
   background-color: var(--professional-background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: contain;
+  touch-action: manipulation;
+}
+
+header {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 767px) {
+  body {
+    overscroll-behavior-x: none;
+  }
 }
 
 .container {
